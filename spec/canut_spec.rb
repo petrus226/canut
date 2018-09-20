@@ -78,11 +78,16 @@ describe 'The Sucre app' do
       expect(last_response).to be_ok
       expect(last_parsed_response['list'].length).to eq(4)
     end
+
+    it 'return how many items you have added' do
+      post '/items', payload({name: ["Patatas","Huevos","Queso","Tomate","Perlas"],price: [9,6,4,5,2]})
+      expect(last_response).to be_ok
+      expect(last_parsed_response['added_items']).to eq(5)
+    end
   end
 
-
-
   describe 'PUT /item/:id' do
+    
     before do
       post '/item', payload({name: 'Old name'})
       @id = last_parsed_response['item']['id']

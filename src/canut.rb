@@ -13,10 +13,6 @@ end
 
 post '/item' do
   new_item = parsed_body
-  add_item new_item
-end
-
-def add_item new_item
   item = {
     id: SecureRandom.uuid,
     name: new_item['name']
@@ -25,18 +21,24 @@ def add_item new_item
   respond_with({item: item})
 end
 
-post '/items' do
-  recieve_items ||= parsed_body
-  item = {name: recieve_items['name'][0], price: recieve_items['price'][0]}
-  num_items = recieve_items['name'].length
+def add_items new_item
+
+  num_items = new_item['name'].length
   for i in 0..num_items-1
     item = {
       id: SecureRandom.uuid,
-      name: recieve_items['name'][i],
-      price: recieve_items['price'][i]
+      name: new_item['name'][i],
+      price: new_item['price'][i]
     }
     @@list << item
   end
+  num_items
+end
+
+post '/items' do
+
+  added_items = add_items parsed_body
+  respond_with({added_items: added_items})
 end
 
 delete '/list' do
